@@ -7,7 +7,7 @@
 #	Name:
 #		GIFgraph::axestype.pm
 #
-# $Id: axestype.pm,v 2.1 1997/12/23 03:42:36 mgjv Exp mgjv $
+# $Id: axestype.pm,v 2.2 1998/08/14 01:53:48 mgjv Exp mgjv $
 #
 #==========================================================================
 
@@ -43,6 +43,11 @@ my %Defaults = (
 	# Do we want ticks on the x axis?
 
 	x_ticks				=> 1,
+	x_all_ticks			=> 0,
+
+	# vertical printing of x labels
+
+	x_labels_vertical	=> 0,
  
 	# Draw axes as a box? (otherwise just left and bottom)
  
@@ -69,12 +74,12 @@ my %Defaults = (
 
 	# Draw the zero axis in the graph in case there are negative values
 
-	zero_axis			=>	1,
+	zero_axis			=>	0,
 
 	# Draw the zero axis, but do not draw the bottom axis, in case
 	# box-axis == 0
 	# This also moves the x axis labels to the zero axis
-	zero_axis_only		=>	1,
+	zero_axis_only		=>	0,
 
 	# Size of the legend markers
 
@@ -212,13 +217,14 @@ my %Defaults = (
 
 		unless ( $s->{x_plot_values} ) 
 		{ 
-			$s->set( xafh => 0 ); 
+			$s->set( xafh => 0, xafw => 0 ); 
 		}
 		unless ( $s->{y_plot_values} ) 
 		{
-			$s->set( yafh => 0 );
-			$s->set( yafw => 0 );
+			$s->set( yafh => 0, yafw => 0 );
 		}
+
+		$s->{x_axis_label_height} = $s->get_x_axis_label_height($data);
 
 		my $lbl = ($s->{xlfh} ? 1 : 0) + ($s->{xafh} ? 1 : 0);
 
@@ -226,7 +232,7 @@ my %Defaults = (
 		$s->{bottom} = 
 			$s->{gify} - $s->{b_margin} - 1 -
 			( $s->{xlfh} ? $s->{xlfh} : 0 ) -
-			( $s->{xafh} ? $s->{xafh}: 0) -
+			( $s->{x_axis_label_height} ? $s->{x_axis_label_height}: 0) -
 			( $lbl ? $lbl * $s->{text_space} : 0 )
 		;
 
@@ -307,6 +313,25 @@ my %Defaults = (
 					$s->{y_label_len}[$a] = $len;
 			}
 		}
+	}
+
+	sub get_x_axis_label_height
+	{
+		my $s = shift;
+		my $data = shift;
+
+		return $s->{xafh} unless $s->{x_labels_vertical};
+
+		my $len = 0;
+		my $labels = $data->[0];
+		my $label;
+		foreach $label (@$labels)
+		{
+			my $llen = length($label);
+			($llen > $len) and $len = $llen;
+		}
+
+		return $len * $s->{xafw};
 	}
  
 	# inherit open_graph from GIFgraph
@@ -460,6 +485,10 @@ my %Defaults = (
 
 			$y = $s->{bottom} unless ($s->{zero_axis_only});
 
+			next 
+				if ( !$s->{x_all_ticks} and 
+						$i%($s->{x_label_skip}) and $i != $s->{numpoints} );
+
 			if ($s->{x_ticks})
 			{
 				if ($s->{long_ticks})
@@ -480,9 +509,19 @@ my %Defaults = (
 			next 
 				if ( $i%($s->{x_label_skip}) and $i != $s->{numpoints} );
 
-			$x -= $s->{xafw} * length($$d[0][$i])/2;
-			my $yt = $y + $s->{text_space}/2;
-			$g->string($s->{xaf}, $x, $yt, $$d[0][$i], $s->{alci});
+			if ($s->{x_labels_vertical})
+			{
+				$x -= $s->{xafw};
+				my $yt = 
+					$y + $s->{text_space}/2 + $s->{xafw} * length($$d[0][$i]);
+				$g->stringUp($s->{xaf}, $x, $yt, $$d[0][$i], $s->{alci});
+			}
+			else
+			{
+				$x -= $s->{xafw} * length($$d[0][$i])/2;
+				my $yt = $y + $s->{text_space}/2;
+				$g->string($s->{xaf}, $x, $yt, $$d[0][$i], $s->{alci});
+			}
 		}
 	}
  
@@ -534,7 +573,7 @@ my %Defaults = (
 
 		# Overwrite these with any user supplied ones
 
-		if ( $s->{y_min_value} ) 
+		if ( defined $s->{y_min_value} ) 
 		{
 			my $i;
 			for $i (1 .. 2)
@@ -543,7 +582,7 @@ my %Defaults = (
 			}
 		}
 
-		if ( $s->{y_max_value} ) 
+		if ( defined $s->{y_max_value} ) 
 		{
 			my $i;
 			for $i (1 .. 2)
@@ -705,7 +744,7 @@ my %Defaults = (
 		my $y_max = 
 			($s->{two_axes} && $i == 2) ? $s->{y_max}[2] : $s->{y_max}[1];
 
-		my $y_step = ($s->{bottom} - $s->{top})/($y_max - $y_min);
+		my $y_step = abs(($s->{bottom} - $s->{top})/($y_max - $y_min));
 
 		return ( 
 			_round( $s->{left} + $x * $s->{x_step} ),

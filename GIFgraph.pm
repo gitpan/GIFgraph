@@ -18,14 +18,16 @@
 #		GIFgraph::area
 #		GIFgraph::pie
 #
-# $Id: GIFgraph.pm,v 2.1 1997/12/23 03:41:12 mgjv Exp mgjv $
+# $Id: GIFgraph.pm,v 2.2 1998/08/14 01:53:48 mgjv Exp mgjv $
 #
 #==========================================================================
 
-require 5.003;
+require 5.004;
 
-#use strict qw(vars refs subs);
 use strict qw(vars refs);
+#use strict;		# TODO work with file handles, GIFLOGO
+
+use vars qw(@ISA);
 
 # Use Lincoln Stein's GD and Thomas Boutell's libgd.a
 use GD;
@@ -39,11 +41,11 @@ use GD;
 package GIFgraph;
 
 $GIFgraph::prog_name    = 'GIFgraph.pm';
-$GIFgraph::prog_rcs_rev = '$Revision: 2.1 $';
+$GIFgraph::prog_rcs_rev = '$Revision: 2.2 $';
 $GIFgraph::prog_version = 
 	($GIFgraph::prog_rcs_rev =~ /\s+(\d*\.\d*)/) ? $1 : "0.0";
 
-$GIFgraph::VERSION = '1.01';
+$GIFgraph::VERSION = '1.03';
 
 # Some tools and utils
 use GIFgraph::colour qw(:colours);
@@ -735,6 +737,17 @@ Print every I<x_label_skip>th number under the tick on the x axis, and
 every I<y_label_skip>th number next to the tick on the y axis.
 Default: 1 for both.
 
+=item x_all_ticks
+
+Force a print of all the x ticks, even if x_label_skip is set to a value
+Default: 0.
+
+=item x_labels_vertical
+
+If set to a true value, the X axis labels will be printed vertically.
+This can be handy in case these labels get very long.
+Default: 0.
+
 =item x_plot_values, y_plot_values
 
 If set to a true value, the values of the ticks on the x or y axes
@@ -759,14 +772,14 @@ If set to a true value, the axis for y values of 0 will always be
 drawn. This might be useful in case your graph contains negative
 values, but you want it to be clear where the zero value is. (see also
 I<zero_axis_only> and I<box_axes>).
-Default: 1.
+Default: 0.
 
 =item zero_axis_only
 
 If set to a true value, the zero axis will be drawn (see
 I<zero_axis>), and no axis at the bottom of the graph will be drawn.
 The labels for X values will be placed on the zero exis.
-Default: 1.
+Default: 0.
 
 =item y_max_value, y_min_value
 

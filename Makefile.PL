@@ -9,33 +9,19 @@ BEGIN { require 5.001 }
  
 use ExtUtils::MakeMaker;
  
-#--- MY package
- 
-# sub MY::libscan
-# {
-	# my($self,$path) = @_;
- # 
-	# return '' 
-		# if ($path =~ m:/(RCS|CVS|SCCS)/: ||
-			# $path =~ m:[~%]$: ||
-			# $path =~ m:\.(orig|rej|nfs|b[ac]k|swp)$:
-          # );
- # 
-	# print "$path\n";
-	# $path;
-# }
-
- 
-#--- Write the Makefile
- 
 my @clean = qw(*% *.html *.b[ac]k *.old .[A-z]* tags);
- 
 push @clean, map { "*/$_" } @clean;
  
 WriteMakefile(
 		'VERSION_FROM'		=> $MODNAME . '.pm',	#finds $VERSION
         'DISTNAME'  		=> $MODNAME,
         'NAME'      		=> $MODNAME,
+
+		($] >= 5.005 ?
+			('ABSTRACT'		=> 'Produces GIF graph plots',
+			 'AUTHOR'		=> 'Martien Verbruggen (mgjv@comdyn.com.au)',
+			) : ()
+		),
 
 		'PREREQ_PM'			=> { 'GD' => 0, },
  

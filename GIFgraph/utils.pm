@@ -10,7 +10,7 @@
 #	Description:
 #		Package of general utilities.
 #
-# $Id: utils.pm,v 2.1 1997/12/23 03:43:23 mgjv Exp mgjv $
+# $Id: utils.pm,v 2.1 1997/12/23 03:43:23 mgjv Exp $
 #
 #==========================================================================
  
