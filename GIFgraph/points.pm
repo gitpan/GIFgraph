@@ -1,13 +1,11 @@
 #==========================================================================
-#			   Copyright (c) 1995 Martien Verbruggen
-#			   Copyright (c) 1996 Commercial Dynamics Pty Ltd
-#			   Copyright (c) 1997 Martien Verbruggen
+#			   Copyright (c) 1995-1998 Martien Verbruggen
 #--------------------------------------------------------------------------
 #
 #	Name:
 #		GIFgraph::points.pm
 #
-# $Id: points.pm,v 2.2 1998/08/14 01:53:48 mgjv Exp mgjv $
+# $Id: points.pm,v 2.3 1998/08/18 03:15:26 mgjv Exp $
 #
 #==========================================================================
 
@@ -52,17 +50,27 @@ my %Defaults = (
 		my $ds;
 		foreach $ds (1..$s->{numsets}) 
 		{
-			# Pick a colour
-			my $dsci = $s->set_clr( $g, $s->pick_data_clr($ds) );
-			my $type = $s->pick_marker($ds);
+			$s->draw_data_set($g, $$d[$ds], $ds);
+		}
+	}
 
-			my $i;
-			for $i (0 .. $s->{numpoints}) 
-			{
-				next if (!defined($$d[$ds][$i]));
-				my ($xp, $yp) = $s->val_to_pixel($i+1, $$d[$ds][$i], $ds);
-				$s->marker( $g, $xp, $yp, $type, $dsci );
-			}
+	sub draw_data_set($$$) # GD::Image, \@data
+	{
+		my $s = shift;
+		my $g = shift;
+		my $d = shift;
+		my $ds = shift;
+
+		# Pick a colour
+		my $dsci = $s->set_clr( $g, $s->pick_data_clr($ds) );
+		my $type = $s->pick_marker($ds);
+
+		my $i;
+		for $i (0 .. $s->{numpoints}) 
+		{
+			next if (!defined($$d[$i]));
+			my ($xp, $yp) = $s->val_to_pixel($i+1, $$d[$i], $ds);
+			$s->marker( $g, $xp, $yp, $type, $dsci );
 		}
 	}
 

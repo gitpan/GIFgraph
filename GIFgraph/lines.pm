@@ -1,13 +1,11 @@
 #==========================================================================
-#			   Copyright (c) 1995 Martien Verbruggen
-#			   Copyright (c) 1996 Commercial Dynamics Pty Ltd
-#			   Copyright (c) 1997 Martien Verbruggen
+#			   Copyright (c) 1995-1998 Martien Verbruggen
 #--------------------------------------------------------------------------
 #
 #	Name:
 #		GIFgraph::lines.pm
 #
-# $Id: lines.pm,v 2.2 1998/08/14 01:53:48 mgjv Exp mgjv $
+# $Id: lines.pm,v 2.3 1998/08/18 03:15:26 mgjv Exp $
 #
 #==========================================================================
 
@@ -51,30 +49,28 @@ my %Defaults = (
 	}
 
 	# PRIVATE
-	sub draw_data($$) # GD::Image, \@data
+
+	sub draw_data_set($$$) # GD::Image, \@data
 	{
 		my $s = shift;
 		my $g = shift;
 		my $d = shift;
+		my $ds = shift;
 
-		my $ds;
-		foreach $ds (1 .. $s->{numsets}) 
+		my $dsci = $s->set_clr( $g, $s->pick_data_clr($ds) );
+		my ($xb, $yb) = $s->val_to_pixel( 1, $$d[0], $ds);
+		my $type = $s->pick_line_type($ds);
+
+		my $i;
+		for $i (1 .. $s->{numpoints}) 
 		{
-			my $dsci = $s->set_clr( $g, $s->pick_data_clr($ds) );
-			my ($xb, $yb) = $s->val_to_pixel( 1, $$d[$ds][0], $ds);
-			my $type = $s->pick_line_type($ds);
+			next if (!defined($$d[$i]));
+			my ($xe, $ye) = $s->val_to_pixel($i+1, $$d[$i], $ds);
 
-			my $i;
-			for $i (1 .. $s->{numpoints}) 
-			{
-				next if (!defined($$d[$ds][$i]));
-				my ($xe, $ye) = $s->val_to_pixel($i+1, $$d[$ds][$i], $ds);
-
-				#$g->line( $xb, $yb, $xe, $ye, $dsci );
-				$s->draw_line( $g, $xb, $yb, $xe, $ye, $type, $dsci );
-				($xb, $yb) = ($xe, $ye);
-		   }
-		}
+			#$g->line( $xb, $yb, $xe, $ye, $dsci );
+			$s->draw_line( $g, $xb, $yb, $xe, $ye, $type, $dsci );
+			($xb, $yb) = ($xe, $ye);
+	   }
 	}
 
 	sub pick_line_type($)
