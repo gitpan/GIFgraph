@@ -7,7 +7,7 @@
 #		GIFgraph.pm
 #
 #	Description:
-#               Module to create graphs from a data set, outputting
+#       Module to create graphs from a data set, outputting
 #		GIF format graphics.
 #
 #		Package of a number of graph types:
@@ -18,7 +18,7 @@
 #		GIFgraph::area
 #		GIFgraph::pie
 #
-# $Id: GIFgraph.pm,v 1.7 1997/12/18 23:47:07 mgjv Exp mgjv $
+# $Id: GIFgraph.pm,v 2.1 1997/12/23 03:41:12 mgjv Exp mgjv $
 #
 #==========================================================================
 
@@ -39,11 +39,11 @@ use GD;
 package GIFgraph;
 
 $GIFgraph::prog_name    = 'GIFgraph.pm';
-$GIFgraph::prog_rcs_rev = '$Revision: 1.7 $';
+$GIFgraph::prog_rcs_rev = '$Revision: 2.1 $';
 $GIFgraph::prog_version = 
 	($GIFgraph::prog_rcs_rev =~ /\s+(\d*\.\d*)/) ? $1 : "0.0";
 
-$GIFgraph::VERSION = '1.00';
+$GIFgraph::VERSION = '1.01';
 
 # Some tools and utils
 use GIFgraph::colour qw(:colours);
@@ -308,7 +308,8 @@ my %Defaults = (
 
         ( $self->{numsets} < 1 || $self->{numpoints} < 0 ) && die "No Data";
 
-        for my $i ( 1..$self->{numsets} ) 
+		my $i;
+        for $i ( 1..$self->{numsets} ) 
 		{
 			die "Data array $i: length misfit"
 				unless ( $self->{numpoints} == $#{@$data[$i]} );
@@ -721,6 +722,12 @@ I<tick_length>.  Default: 1.
 Number of ticks to print for the Y axis. Use this, together with
 I<y_label_skip> to control the look of ticks on the y axis.
 Default: 5.
+
+=item y_number_format
+
+An sprintf() type of format string to display numbers on the Y axes.
+If not defined, no formatting will be done.
+Default: undef.
 
 =item x_label_skip, y_label_skip
 

@@ -7,7 +7,7 @@
 #	Name:
 #		GIFgraph::bars.pm
 #
-# $Id: bars.pm,v 1.6 1997/12/18 03:01:08 mgjv Exp mgjv $
+# $Id: bars.pm,v 2.1 1997/12/23 03:43:23 mgjv Exp mgjv $
 #
 #==========================================================================
  
@@ -48,12 +48,14 @@ use GIFgraph::utils qw(:all);
 
 		my $zero = $s->{zeropoint};
 
-		for my $i (0..$s->{numpoints}) 
+		my $i;
+		for $i (0..$s->{numpoints}) 
 		{
 			my $bottom = $zero;
 			my ($xp, $t);
 
-			for my $j (1..$s->{numsets}) 
+			my $j;
+			for $j (1..$s->{numsets}) 
 			{
 				next if (!defined($$d[$j][$i]));
 
@@ -104,12 +106,14 @@ use GIFgraph::utils qw(:all);
 		my $g = shift;
 		my $d = shift;
 
-		foreach my $ds (1..$s->{numsets}) 
+		my $ds;
+		foreach $ds (1..$s->{numsets}) 
 		{
 			# Pick a data colour
 			my $dsci = $s->set_clr( $g, $s->pick_data_clr($ds) );
 
-			for my $i (0..$s->{numpoints}) 
+			my $i;
+			for $i (0..$s->{numpoints}) 
 			{
 				next if (!defined($$d[$ds][$i]));
 

@@ -7,7 +7,7 @@
 #	Name:
 #		GIFgraph::lines.pm
 #
-# $Id: lines.pm,v 1.3 1997/12/18 03:01:08 mgjv Exp mgjv $
+# $Id: lines.pm,v 2.1 1997/12/23 03:42:36 mgjv Exp mgjv $
 #
 #==========================================================================
 
@@ -43,7 +43,8 @@ my %Defaults = (
 
 		$self->SUPER::initialise();
 
-		foreach my $key (keys %Defaults)
+		my $key;
+		foreach $key (keys %Defaults)
 		{
 			$self->set( $key => $Defaults{$key} );
 		}
@@ -56,13 +57,15 @@ my %Defaults = (
 		my $g = shift;
 		my $d = shift;
 
-		foreach my $ds (1 .. $s->{numsets}) 
+		my $ds;
+		foreach $ds (1 .. $s->{numsets}) 
 		{
 			my $dsci = $s->set_clr( $g, $s->pick_data_clr($ds) );
 			my ($xb, $yb) = $s->val_to_pixel( 1, $$d[$ds][0], $ds);
 			my $type = $s->pick_line_type($ds);
 
-			for my $i (1 .. $s->{numpoints}) 
+			my $i;
+			for $i (1 .. $s->{numpoints}) 
 			{
 				next if (!defined($$d[$ds][$i]));
 				my ($xe, $ye) = $s->val_to_pixel($i+1, $$d[$ds][$i], $ds);
@@ -143,7 +146,8 @@ my %Defaults = (
 		# Tried the line_width thing with setBrush, ugly results
 		# TODO: This loop probably should be around the datasets 
 		# for nicer results
-		for my $i (1..$lw)
+		my $i;
+		for $i (1..$lw)
 		{
 			my $yslw = $ys + int($lw/2) - $i;
 			my $yelw = $ye + int($lw/2) - $i;

@@ -7,7 +7,7 @@
 #	Name:
 #		GIFgraph::points.pm
 #
-# $Id: points.pm,v 1.4 1997/12/18 03:01:08 mgjv Exp mgjv $
+# $Id: points.pm,v 2.1 1997/12/23 03:42:36 mgjv Exp mgjv $
 #
 #==========================================================================
 
@@ -35,7 +35,8 @@ my %Defaults = (
 
 		$self->SUPER::initialise();
 
-		foreach my $key (keys %Defaults)
+		my $key;
+		foreach $key (keys %Defaults)
 		{
 			$self->set( $key => $Defaults{$key} );
 		}
@@ -48,13 +49,15 @@ my %Defaults = (
 		my $g = shift;
 		my $d = shift;
 
-		foreach my $ds (1..$s->{numsets}) 
+		my $ds;
+		foreach $ds (1..$s->{numsets}) 
 		{
 			# Pick a colour
 			my $dsci = $s->set_clr( $g, $s->pick_data_clr($ds) );
 			my $type = $s->pick_marker($ds);
 
-			for my $i (0 .. $s->{numpoints}) 
+			my $i;
+			for $i (0 .. $s->{numpoints}) 
 			{
 				next if (!defined($$d[$ds][$i]));
 				my ($xp, $yp) = $s->val_to_pixel($i+1, $$d[$ds][$i], $ds);

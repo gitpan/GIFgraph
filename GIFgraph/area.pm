@@ -7,7 +7,7 @@
 #	Name:
 #		GIFgraph::area.pm
 #
-# $Id: area.pm,v 1.4 1997/12/18 03:01:08 mgjv Exp mgjv $
+# $Id: area.pm,v 2.1 1997/12/23 03:43:23 mgjv Exp mgjv $
 #
 #==========================================================================
 
@@ -27,7 +27,8 @@ use GIFgraph::axestype;
 		my $g = shift;		# gd object reference
 		my $d = shift;		# reference to data set
 
-		foreach my $ds (1..$s->{numsets}) 
+		my $ds;
+		foreach $ds (1..$s->{numsets}) 
 		{
 			my $num = 0;
 
@@ -42,7 +43,8 @@ use GIFgraph::axestype;
 			$poly->addPt($x, $y);
 
 			# Add the data points
-			for my $i (0 .. $s->{numpoints}) 
+			my $i;
+			for $i (0 .. $s->{numpoints}) 
 			{
 				next if (!defined($$d[$ds][$i]));
 
@@ -61,7 +63,7 @@ use GIFgraph::axestype;
 			$g->polygon($poly, $s->{acci});
 
 			# Draw the accent lines
-			for my $i (1 .. ($s->{numpoints} - 1)) 
+			for $i (1 .. ($s->{numpoints} - 1)) 
 			{
 				next if (!defined($$d[$ds][$i]));
 
