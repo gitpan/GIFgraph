@@ -3,8 +3,7 @@
  
 #--- Distribution section ---
  
-$DISTNAME = 'GIFgraph';
-$VERSION  = "0.90";
+$MODNAME = 'GIFgraph';
  
 BEGIN { require 5.001 }
  
@@ -12,35 +11,39 @@ use ExtUtils::MakeMaker;
  
 #--- MY package
  
-sub MY::libscan
-{
- my($self,$path) = @_;
- 
- return '' 
-        if($path =~ m:/(RCS|CVS|SCCS)/: ||
-           $path =~ m:[~%]$: ||
-           $path =~ m:\.(orig|rej|nfs|b[ac]k)$:
-          );
- 
- $path;
-}
+# sub MY::libscan
+# {
+	# my($self,$path) = @_;
+ # 
+	# return '' 
+		# if ($path =~ m:/(RCS|CVS|SCCS)/: ||
+			# $path =~ m:[~%]$: ||
+			# $path =~ m:\.(orig|rej|nfs|b[ac]k|swp)$:
+          # );
+ # 
+	# print "$path\n";
+	# $path;
+# }
+
  
 #--- Write the Makefile
  
-my @clean = qw(*% *.html *.b[ac]k *.old);
+my @clean = qw(*% *.html *.b[ac]k *.old .[A-z]* tags);
  
 push @clean, map { "*/$_" } @clean;
  
 WriteMakefile(
-        VERSION   => $VERSION,
-        DISTNAME  => $DISTNAME,
-        NAME      => $DISTNAME,
+		'VERSION_FROM'		=> $MODNAME . '.pm',	#finds $VERSION
+        'DISTNAME'  		=> $MODNAME,
+        'NAME'      		=> $MODNAME,
+
+		'PREREQ_PM'			=> { 'GD' => 0, },
  
-        'dist'    => {COMPRESS => 'gzip -9f',
-                      SUFFIX   => '.gz', 
-                      DIST_DEFAULT => 'all tardist',
-                     },
+        'dist'    			=> {
+			'COMPRESS' 		=> 'gzip -9f',
+			'SUFFIX'   		=> 'gz', 
+		},
  
-        'clean'   => {FILES => join(" ", @clean)},
+        'clean'   => { 'FILES' => join(" ", @clean), },
 );
 

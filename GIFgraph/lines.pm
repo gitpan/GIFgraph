@@ -1,48 +1,67 @@
 #==========================================================================
 #			   Copyright (c) 1995 Martien Verbruggen
 #			   Copyright (c) 1996 Commercial Dynamics Pty Ltd
+#			   Copyright (c) 1997 Martien Verbruggen
 #--------------------------------------------------------------------------
 #
 #	Name:
 #		GIFgraph::lines.pm
 #
-# $Id: lines.pm,v 1.1 1997/02/14 02:32:49 mgjv Exp mgjv $
-#
-# $Log: lines.pm,v $
-# Revision 1.1  1997/02/14 02:32:49  mgjv
-# Initial revision
-#
+# $Id: lines.pm,v 1.3 1997/12/18 03:01:08 mgjv Exp mgjv $
 #
 #==========================================================================
+
+package GIFgraph::lines;
 
 use strict qw(vars refs subs);
  
 use GIFgraph::axestype;
 
-package GIFgraph::lines;
+@GIFgraph::lines::ISA = qw( GIFgraph::axestype );
 
-use vars qw( @ISA );
-@ISA = qw( GIFgraph::axestype );
 {
 	# PRIVATE
-	sub draw_data { # GD::Image, \@data
+	sub draw_data($$) # GD::Image, \@data
+	{
 		my $s = shift;
 		my $g = shift;
 		my $d = shift;
-		my $ds;
-		foreach $ds (1..$s->{numsets}) {
+
+		foreach my $ds (1 .. $s->{numsets}) 
+		{
 			my $dsci = $s->set_clr( $g, $s->pick_data_clr($ds) );
 			my ($xb, $yb) = $s->val_to_pixel( 1, $$d[$ds][0], $ds);
-			for (1..$s->{numpoints}) {
-#			print STDERR "GIFgraph::lines::draw_data: $ds, $_ = $$d[$ds][$_]\n";
-				my ($xe, $ye) = $s->val_to_pixel($_+1, $$d[$ds][$_], $ds);
-#			print STDERR "GIFgraph::lines::draw_data: $dsci: $xb, $yb: $xe, $ye\n";
+
+			for my $i (1 .. $s->{numpoints}) 
+			{
+				next if (!defined($$d[$ds][$i]));
+				my ($xe, $ye) = $s->val_to_pixel($i+1, $$d[$ds][$i], $ds);
+
 				$g->line( $xb, $yb, $xe, $ye, $dsci );
 				($xb, $yb) = ($xe, $ye);
 		   }
 		}
 	}
- 
+
+	sub draw_legend_marker($$$$) # (GD::Image, data_set_number, x, y)
+	{
+		my $s = shift;
+		my $g = shift;
+		my $n = shift;
+		my $x = shift;
+		my $y = shift;
+
+		my $ci = $s->set_clr( $g, $s->pick_data_clr($n) );
+
+		$y += int($s->{lg_el_height}/2);
+
+		$g->line(
+			$x, $y, 
+			$x + $s->{legend_marker_width}, $y,
+			$ci
+		);
+	}
+
 } # End of package GIFgraph::lines
 
 1;
