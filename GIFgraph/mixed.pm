@@ -39,18 +39,19 @@ my %Defaults = (
 {
 	sub initialise()
 	{
-		my $self = shift;
+		my $s = shift;
 
-		$self->SUPER::initialise();
+		$s->SUPER::initialise();
 
 		my $key;
 		foreach $key (keys %Defaults)
 		{
-			$self->set( $key => $Defaults{$key} );
+			$s->set( $key => $Defaults{$key} );
 		}
 
-		$self->GIFgraph::lines::initialise();
-		$self->GIFgraph::points::initialise();
+		$s->GIFgraph::lines::initialise();
+		$s->GIFgraph::points::initialise();
+		$s->GIFgraph::bars::initialise();
 	}
 
 	sub draw_data_set($$$) # GD::Image, \@data, $ds

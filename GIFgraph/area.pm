@@ -5,7 +5,7 @@
 #	Name:
 #		GIFgraph::area.pm
 #
-# $Id: area.pm,v 2.3 1998/08/18 03:15:26 mgjv Exp $
+# $Id: area.pm,v 2.4 1998/08/18 06:41:05 mgjv Exp $
 #
 #==========================================================================
 
@@ -42,9 +42,9 @@ use GIFgraph::axestype;
 		my $i;
 		for $i (0 .. $s->{numpoints}) 
 		{
-			next if (!defined($$d[$i]));
+			next unless (defined $d->[$i]);
 
-			($x, $y) = $s->val_to_pixel($i + 1, $$d[$i], $ds);
+			($x, $y) = $s->val_to_pixel($i + 1, $d->[$i], $ds);
 			$poly->addPt($x, $y);
 
 			$num = $i;
@@ -61,9 +61,9 @@ use GIFgraph::axestype;
 		# Draw the accent lines
 		for $i (1 .. ($s->{numpoints} - 1)) 
 		{
-			next unless (defined $$d[$i]);
+			next unless (defined $d->[$i]);
 
-			($x, $y) = $s->val_to_pixel($i + 1, $$d[$i], $ds);
+			($x, $y) = $s->val_to_pixel($i + 1, $d->[$i], $ds);
 			$g->dashedLine( $x, $y, $x, $s->{zeropoint}, $s->{acci} );
 	   }
 	}

@@ -8,7 +8,7 @@
 #	Description:
 #		Package of general utilities.
 #
-# $Id: utils.pm,v 2.2 1998/08/18 03:15:26 mgjv Exp $
+# $Id: utils.pm,v 2.3 1998/08/25 04:22:15 mgjv Exp $
 #
 #==========================================================================
  
@@ -25,7 +25,7 @@ require Exporter;
 %EXPORT_TAGS = ( all => [qw(_max _min _round)],);
 
 $GIFgraph::utils::prog_name    = 'GIFgraph::utils.pm';
-$GIFgraph::utils::prog_rcs_rev = '$Revision: 2.2 $';
+$GIFgraph::utils::prog_rcs_rev = '$Revision: 2.3 $';
 $GIFgraph::utils::prog_version = 
 	($GIFgraph::utils::prog_rcs_rev =~ /\s+(\d*\.\d*)/) ? $1 : "0.0";
 
@@ -48,11 +48,11 @@ $GIFgraph::utils::prog_version =
 
     sub _round { 
         my($n) = shift; 
-        int($n + .5 * ($n <=> 0)); 
+		sprintf("%.0f", $n);
     }
 
     sub version {
-        return $GIFgraph::utils::prog_version;
+        $GIFgraph::utils::prog_version;
     }
 
     $GIFgraph::utils::prog_name;
