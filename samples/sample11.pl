@@ -1,14 +1,14 @@
 use GIFgraph::bars;
-use GIFgraph::colour;
+use strict;
 
 print STDERR "Processing sample 1-1\n";
 
-@data = ( 
+my @data = ( 
     ["1st","2nd","3rd","4th","5th","6th","7th", "8th", "9th"],
     [    1,    2,    5,    6,    3,  1.5,    1,     3,     4],
 );
 
-$my_graph = new GIFgraph::bars();
+my $my_graph = new GIFgraph::bars();
 
 $my_graph->set( 
 	x_label => 'X Label',
@@ -19,7 +19,9 @@ $my_graph->set(
 	y_label_skip => 2,
 );
 
-$my_graph->plot_to_gif( "sample11.gif", \@data );
-
-exit;
+my $gif_data = $my_graph->plot(\@data);
+open(GIF, '>sample11.gif') or die "Cannot write sample11.gif: $!";
+binmode(GIF);
+print GIF $gif_data;
+close(GIF);
 
